@@ -27,7 +27,6 @@ sentence_detector = nltk.data.load('tokenizers/punkt/english.pickle')
 punctuation_tokens = [ '\n','/',"'—" ,' #'  ,'”',  '·',' . ','’', '‘','%','.','#','@' ,"'—",'|','«','» |','|','»','.', '..', '...', ',', ';', ':', '(', ')', '"', '“',',','„','\'', '[', ']', '{', '}', '?', '!', '-', u'–', '+', '*', '--', '\'\'', '``']
 punctuation = "|?.!/;:()&+„.“|0-9'— ·#\r\n\r\n\r\n\xa0-\xa0\r\n\r\n/"
 
-
 stop_words = stopwords.words('english') 
 data['Articles_processed'] = data['Articles'].apply(lambda x: x.lower())
 data['Articles_processed'] = data['Articles'].str.replace(r'\d+', '')
@@ -36,7 +35,6 @@ data['Tokenized'] = data['Articles_processed'].apply(nltk.word_tokenize)
 data['Tokenized'] = data['Tokenized'].apply(lambda x : [item for item in x if item not in punctuation_tokens])
 data['Tokenized'] = data['Tokenized'].apply(lambda x : [ re.sub('[' + punctuation + ']', '', item) for item in x])
 data['Tokenized'] = data['Tokenized'].apply(lambda x : [item for item in x if item not in stop_words])
-
 
 sentences  = data.Tokenized.tolist()
 
@@ -52,12 +50,8 @@ for epoch in range(10):
     random.shuffle(sentences_)
     d2v_model.train(sentences_ , total_examples = d2v_model.corpus_count, epochs = d2v_model.iter)
 #    d2v_model.train(sentences_)
-
     d2v_model.alpha-=0.0002
     d2v_model.min_alpha = d2v_model.alpha
-
-
-
 
 data['dvecs'] = [d2v_model.docvecs['SENT_%d'%i] for i in range(data.shape[0])]
 new_data = data['dvecs'] 
@@ -105,7 +99,7 @@ plt.xticks(())
 plt.yticks(())
 plt.show()
 
-
+#saving and reloading the model
 import pickle
 
 pickle.dump(model1,open('model1.p','wb'))
